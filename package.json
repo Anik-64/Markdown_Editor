@@ -1,0 +1,27 @@
+{
+  "name": "real-time-markdown-editor-with-node",
+  "version": "1.0.0",
+  "description": "This is a markdown editor where normal text will be converted into .md file structure",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anik-64/Real-Time-Markdown-Editor-with-Node.js.git"
+  },
+  "keywords": [
+    "markdown"
+  ],
+  "author": "Anik Majumder",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anik-64/Real-Time-Markdown-Editor-with-Node.js/issues"
+  },
+  "homepage": "https://github.com/Anik-64/Real-Time-Markdown-Editor-with-Node.js#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0"
+  }
+}
