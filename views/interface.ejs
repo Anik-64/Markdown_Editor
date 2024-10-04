@@ -8,12 +8,17 @@
 
     <body class="container-fluid">
 
-        <section class="row">
-            <textarea class="col-md-6 full-height" id="pad">Write your text here..</textarea>
-            <div class="col-md-6 full-height" id="markdown"></div>
-        </section>
+        <div id="split-container">
+            <!-- Markdown Input Area -->
+            <textarea id="pad">Write your text here..</textarea>
 
-        
+            <!-- Markdown Preview Area -->
+            <div id="markdown"></div>
+        </div>
+
+        <!-- Split.js for resizable panes -->
+        <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
+        <!-- Showdown.js for Markdown conversion -->
         <script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.2/dist/showdown.min.js"></script>
         <script src="script.js"></script>
     </body>

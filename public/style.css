@@ -1,21 +1,46 @@
-html, body, section, .full-height {
+/* Ensure full height for html and body */
+html, body {
     height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-#pad{
-    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+/* Split container styling */
+#split-container {
+    display: flex;
+    height: 100vh; 
+    width: 100%;
+}
 
+/* Style for the textarea (left pane) */
+#pad {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     border: none;
     overflow: auto;
     outline: none;
     resize: none;
-
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
+/* Style for the markdown preview (right pane) */
 #markdown {
     overflow: auto;
-    border-left: 1px solid black;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Optional: Style for the splitter */
+.gutter {
+    background-color: #eee;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+    cursor: col-resize;
+    width: 10px;
 }
