@@ -5,6 +5,11 @@
     --textarea-background: #f8f8f8;
     --preview-background: #ffffff;
     --border-color: #cccccc;
+
+    /* Gutter Colors */
+    --gutter-color: #cccccc; /* Light Mode Gutter Color */
+    --gutter-hover-color: #aaaaaa;
+    --gutter-active-color: #888888;
 }
 
 body.dark-theme {
@@ -13,6 +18,11 @@ body.dark-theme {
     --textarea-background: #3c3c3c;
     --preview-background: #2c2c2c;
     --border-color: #555555;
+
+    /* Gutter Colors for Dark Mode */
+    --gutter-color: #555555;
+    --gutter-hover-color: #777777;
+    --gutter-active-color: #999999;
 }
 
 /* Apply CSS Variables */
@@ -115,28 +125,78 @@ input:checked + .slider:before {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Optional: Style for the splitter */
+/* Enhanced Gutter Styling */
 .gutter {
-    background-color: var(--border-color);
+    background-color: var(--gutter-color);
     background-repeat: no-repeat;
-    background-position: 50%;
+    background-position: center;
+    background-size: 20px 20px; /* Size of the grab handle */
+    transition: background-color 0.3s, background-image 0.3s;
 }
 
 .gutter.gutter-horizontal {
     cursor: col-resize;
     width: 10px;
+    /* Create a grab handle with dots */
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 8px,
+        rgba(0, 0, 0, 0.2) 8px,
+        rgba(0, 0, 0, 0.2) 10px,
+        rgba(0, 0, 0, 0.2) 12px
+    );
+    background-image: repeating-linear-gradient(
+        10deg,
+        transparent,
+        transparent 8px,
+        rgba(0, 0, 0, 0.2) 8px,
+        rgba(0, 0, 0, 0.2) 10px,
+        rgba(0, 0, 0, 0.2) 12px
+    );
+}
+
+.gutter.gutter-horizontal:hover {
+    background-color: var(--gutter-hover-color);
+    background-image: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 6px,
+        rgba(0, 0, 0, 0.3) 6px,
+        rgba(0, 0, 0, 0.3) 18px
+    );
+}
+
+.gutter.gutter-horizontal.dragging {
+    background-color: var(--gutter-active-color);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #split-container {
         flex-direction: column;
-        padding-top: 70px; /* Increased space for toggle on smaller screens */
     }
 
     .gutter.gutter-horizontal {
         cursor: row-resize;
         height: 10px;
         width: 100%;
+        background-image: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 8px,
+            rgba(0, 0, 0, 0.2) 8px,
+            rgba(0, 0, 0, 0.2) 10px
+        );
+    }
+
+    .gutter.gutter-horizontal:hover {
+        background-image: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 6px,
+            rgba(0, 0, 0, 0.3) 6px,
+            rgba(0, 0, 0, 0.3) 8px
+        );
     }
 }

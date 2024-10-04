@@ -1,14 +1,30 @@
 window.onload = function() {
+    // Retrieve saved sizes from localStorage or use default [50, 50]
+    var savedSizes = JSON.parse(localStorage.getItem('split-sizes')) || [50, 50];
+
     // Initialize Split.js
-    Split(['#pad', '#markdown'], {
-        sizes: [50, 50], // Initial sizes in percentage
-        minSize: 200,     // Minimum size of each pane in pixels
-        gutterSize: 10,   // Width of the gutter in pixels
+    var splitInstance = Split(['#pad', '#markdown'], {
+        sizes: savedSizes,
+        minSize: 200,
+        gutterSize: 10,
         cursor: 'col-resize',
         direction: 'horizontal',
         onDragEnd: function(sizes) {
-            // Optional: Handle actions after dragging ends
+            // Save sizes to localStorage when dragging ends
+            localStorage.setItem('split-sizes', JSON.stringify(sizes));
+        },
+        onDrag: function(direction, sizes, gutterElement) {
+            // Add dragging class when dragging starts
+            gutterElement.classList.add('dragging');
         }
+    });
+
+    // Remove dragging class on mouseup
+    document.addEventListener('mouseup', function() {
+        var gutters = document.querySelectorAll('.gutter');
+        gutters.forEach(function(gutter) {
+            gutter.classList.remove('dragging');
+        });
     });
 
     // Initialize Showdown converter
@@ -17,8 +33,6 @@ window.onload = function() {
     // Get references to DOM elements
     var pad = document.getElementById('pad');
     var markdownArea = document.getElementById('markdown');
-    var themeSwitch = document.getElementById('theme-switch');
-    var themeLabel = document.getElementById('theme-label');
 
     // Function to convert Markdown to HTML and display it
     var convertTextAreaToMarkdown = function(){
@@ -30,34 +44,38 @@ window.onload = function() {
     // Event listener for input changes in the textarea
     pad.addEventListener('input', convertTextAreaToMarkdown);
 
+    // Initial conversion on page load
+    convertTextAreaToMarkdown();
+
     // Theme Switching Logic
-    var setTheme = function(theme) {
-        if (theme === 'dark') {
+    var themeSwitch = document.getElementById('theme-switch');
+    var themeLabel = document.getElementById('theme-label');
+
+    // Function to set the theme
+    var setTheme = function(isDark) {
+        if (isDark) {
             document.body.classList.add('dark-theme');
-            themeSwitch.checked = true;
             themeLabel.textContent = 'Dark Mode';
         } else {
             document.body.classList.remove('dark-theme');
-            themeSwitch.checked = false;
             themeLabel.textContent = 'Light Mode';
         }
+        // Save theme preference to localStorage
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
     };
-
-    // Load saved theme from localStorage
-    var savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
 
     // Event listener for theme toggle
     themeSwitch.addEventListener('change', function() {
-        if (this.checked) {
-            setTheme('dark');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            setTheme('light');
-            localStorage.setItem('theme', 'light');
-        }
+        setTheme(this.checked);
     });
 
-    // Initial conversion on page load
-    convertTextAreaToMarkdown();
+    // Initialize theme based on saved preference
+    var savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        themeSwitch.checked = true;
+        setTheme(true);
+    } else {
+        themeSwitch.checked = false;
+        setTheme(false);
+    }
 };
