@@ -1,15 +1,94 @@
-/* Ensure full height for html and body */
+/* CSS Variables for Themes */
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --textarea-background: #f8f8f8;
+    --preview-background: #ffffff;
+    --border-color: #cccccc;
+}
+
+body.dark-theme {
+    --background-color: #2c2c2c;
+    --text-color: #f5f5f5;
+    --textarea-background: #3c3c3c;
+    --preview-background: #2c2c2c;
+    --border-color: #555555;
+}
+
+/* Apply CSS Variables */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Theme Toggle Button Styling */
+.theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Switch Styling */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
 }
 
 /* Split container styling */
 #split-container {
     display: flex;
-    height: 100vh; 
+    height: 100vh; /* Full viewport height */
     width: 100%;
+    padding-top: 50px; /* Space for the toggle button */
+    box-sizing: border-box;
 }
 
 /* Style for the textarea (left pane) */
@@ -19,11 +98,11 @@ html, body {
     overflow: auto;
     outline: none;
     resize: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
     padding: 10px;
     box-sizing: border-box;
+    background-color: var(--textarea-background);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* Style for the markdown preview (right pane) */
@@ -31,11 +110,14 @@ html, body {
     overflow: auto;
     padding: 10px;
     box-sizing: border-box;
+    background-color: var(--preview-background);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* Optional: Style for the splitter */
 .gutter {
-    background-color: #eee;
+    background-color: var(--border-color);
     background-repeat: no-repeat;
     background-position: 50%;
 }
@@ -43,4 +125,18 @@ html, body {
 .gutter.gutter-horizontal {
     cursor: col-resize;
     width: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #split-container {
+        flex-direction: column;
+        padding-top: 70px; /* Increased space for toggle on smaller screens */
+    }
+
+    .gutter.gutter-horizontal {
+        cursor: row-resize;
+        height: 10px;
+        width: 100%;
+    }
 }
