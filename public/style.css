@@ -5,6 +5,8 @@
     --textarea-background: #f8f8f8;
     --preview-background: #ffffff;
     --border-color: #cccccc;
+    --markdown-border-top: #000000;
+    --markdown-border-right: #000000;
 
     /* Gutter Colors */
     --gutter-color: #cccccc; /* Light Mode Gutter Color */
@@ -18,6 +20,8 @@ body.dark-theme {
     --textarea-background: #3c3c3c;
     --preview-background: #2c2c2c;
     --border-color: #555555;
+    --markdown-border-top: #f7f3f3;
+    --markdown-border-right: #f7f3f3;
 
     /* Gutter Colors for Dark Mode */
     --gutter-color: #555555;
@@ -120,6 +124,8 @@ input:checked + .slider:before {
     overflow: auto;
     padding: 10px;
     box-sizing: border-box;
+    border-right: 1px dotted var(--markdown-border-right);
+    border-top: 1px dotted var(--markdown-border-top);
     background-color: var(--preview-background);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
