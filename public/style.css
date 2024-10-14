@@ -145,7 +145,7 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
-#theme-label {
+#theme-label, .hidden-field {
     display: none;
 }
 
@@ -286,7 +286,7 @@ input:checked + .slider:before {
 .introjs-tooltip-title {
     font-weight: bold;
     font-size: 16px;
-    color: #ecf0f1; /* Lighter color for title */
+    color: #7cb0bd; /* Lighter color for title */
 }
 
 /* Close Button (X) */

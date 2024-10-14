@@ -79,19 +79,76 @@ window.onload = function() {
         setTheme(false);
     }
 
-    // Initialize Intro.js for the tour
-    introJs().setOptions({
-        steps: [
-            {
-                element: document.querySelector('.toggle-btn'),
-                intro: "This is where you can toggle between light and dark mode.",
-                position: 'bottom'
-            },
-            {
-                element: document.querySelector('.gutter'),
-                intro: "You can resize this gutter by dragging left or right to adjust the input and preview areas.",
-                position: 'right'
+    // Helper function to set a cookie
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
+
+    // Helper function to get a cookie
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    // Check if the "dontShowAgain" cookie exists
+    if (!getCookie('intro_dont_show_again')) {
+        // Initialize Intro.js for the tour
+        introJs().setOptions({
+            dontShowAgain: true, // Enable the "Don't Show Again" checkbox
+            steps: [
+                {
+                    title: "Welcome",
+                    intro: "Welcome to the Markdown Viewer!👋"
+                },
+                {
+                    title: "Theme Toggle",
+                    element: document.querySelector('.toggle-btn'),
+                    intro: "This is where you can toggle between light and dark mode.",
+                    position: 'bottom'
+                },
+                {
+                    title: "Resize Gutter",
+                    element: document.querySelector('.gutter'),
+                    intro: "You can resize this gutter by dragging left or right to adjust the input and preview areas.",
+                    position: 'right'
+                },
+                {
+                    title: "Markdown Input",
+                    element: document.querySelector('#pad'),
+                    intro: "This is where you can write your Markdown text.",
+                    position: 'right'
+                },
+                {
+                    title: "Markdown Preview",
+                    element: document.querySelector('#markdown'),
+                    intro: "This area shows the preview of your Markdown. Have fun!",
+                    position: 'left'
+                }
+            ]
+        }).oncomplete(function() {
+            // If the "Don't Show Again" checkbox is checked, store the cookie
+            var dontShowAgainCheckbox = document.querySelector(".introjs-dontshowagain");
+            if (dontShowAgainCheckbox && dontShowAgainCheckbox.checked) {
+                setCookie('intro_dont_show_again', 'true', 365); // Cookie will expire in 1 year
             }
-        ]
-    }).start();
+        }).onexit(function() {
+            // Handle the case when the user clicks the "X" (exit) button
+            var dontShowAgainCheckbox = document.querySelector(".introjs-dontshowagain");
+            if (dontShowAgainCheckbox && dontShowAgainCheckbox.checked) {
+                setCookie('intro_dont_show_again', 'true', 365);
+            }
+        }).start();
+    }
 };
