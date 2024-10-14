@@ -206,3 +206,126 @@ input:checked + .slider:before {
         );
     }
 }
+
+/* 
+    ***Customize the tooltip box 
+*/
+
+/* Tooltip Container */
+.introjs-tooltip {
+    background-color: #2c3e50; /* Dark background for contrast */
+    color: #000000; /* Light text for readability */
+    border-radius: 10px; /* Smooth, rounded corners */
+    padding: 15px 20px; /* Adequate padding for spacing */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    transition: all 0.3s ease-in-out; /* Smooth transition effect */
+    font-family: "Segoe UI", Arial, sans-serif; /* Modern font */
+}
+
+/* Tooltip Header */
+.introjs-tooltip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Tooltip Title */
+.introjs-tooltip-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #ecf0f1; /* Lighter color for title */
+}
+
+/* Close Button (X) */
+.introjs-skipbutton {
+    color: #bdc3c7;
+    font-size: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.introjs-skipbutton:hover {
+    color: #e74c3c; /* Red hover effect */
+}
+
+/* Tooltip Text */
+.introjs-tooltiptext {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* Customize Arrow */
+.introjs-arrow {
+    border-color: #2c3e50 transparent transparent transparent;
+}
+
+/* Tooltip Buttons */
+.introjs-tooltipbuttons a {
+    background-color: #3498db; /* Primary button color */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin: 0 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.introjs-tooltipbuttons a:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    color: #fff;
+}
+
+.introjs-prevbutton.introjs-disabled,
+.introjs-nextbutton.introjs-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Customize the bullets (steps indicator) */
+.introjs-bullets li {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.introjs-bullets a {
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #bdc3c7; /* Inactive step color */
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.introjs-bullets a.active {
+    background-color: #3498db; /* Active step color */
+}
+
+/* Tooltip progress bar (if enabled) */
+.introjs-progress {
+    background-color: #34495e;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.introjs-progressbar {
+    background-color: #3498db;
+    height: 5px;
+    border-radius: 10px;
+}
+
+/* Fade-in effect for tooltip */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.introjs-tooltip {
+    animation: fadeIn 0.5s ease-in-out;
+}
+

@@ -78,4 +78,20 @@ window.onload = function() {
         themeSwitch.checked = false;
         setTheme(false);
     }
+
+    // Initialize Intro.js for the tour
+    introJs().setOptions({
+        steps: [
+            {
+                element: document.querySelector('.toggle-btn'),
+                intro: "This is where you can toggle between light and dark mode.",
+                position: 'bottom'
+            },
+            {
+                element: document.querySelector('.gutter'),
+                intro: "You can resize this gutter by dragging left or right to adjust the input and preview areas.",
+                position: 'right'
+            }
+        ]
+    }).start();
 };
