@@ -7,6 +7,7 @@
 
         <!-- Intro.js CDN -->
         <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </head>
 
     <body class="container-fluid">
@@ -17,14 +18,13 @@
                 Enhance your Markdown experience! &nbsp;&nbsp;&nbsp;
             </div>
 
-            <!-- <blockquote class="blockquote mb-0 text-center">
-                <p class="mb-0">"Enhance your Markdown experience!"</p>
-            </blockquote> -->
-
             <div class="d-flex align-items-center">
-                <label class="switch toggle-btn" data-intro="This is where you can toggle between light and dark mode.">
+                <label class="switch toggle-btn">
                     <input type="checkbox" id="theme-switch">
-                    <span class="slider round"></span>
+                    <span class="slider round">
+                        <i class="fas fa-sun sun-icon"></i>
+                        <i class="fas fa-moon moon-icon"></i>
+                    </span>
                 </label>
                 <span id="theme-label">Light Mode</span>
             </div>
