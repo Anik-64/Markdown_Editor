@@ -36,6 +36,7 @@ html, body {
     padding: 0;
     background-color: var(--background-color);
     color: var(--text-color);
+    /* font-family: Arial, Helvetica, sans-serif; */
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -380,5 +381,48 @@ input:checked + .slider:before {
 
 .introjs-tooltip {
     animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Container for Color Pickers */
+.color-pickers {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 8px;
+}
+
+/* Labels for Color Pickers */
+.color-pickers label {
+    font-size: 13px;
+    color: var(--text-color);
+    margin-right: 2px;
+}
+
+/* Customize the Color Input */
+.color-pickers input[type="color"] {
+    border: none;
+    width: 25px;
+    height: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    padding: 3px;
+}
+
+/* Hover Effect on Color Input */
+.color-pickers input[type="color"]:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+/* Customize the Color Input (WebKit Browsers) */
+.color-pickers input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-pickers input[type="color"]::-webkit-color-swatch {
+    border-radius: 5px;
+    border: none;
 }
 
