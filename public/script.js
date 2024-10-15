@@ -119,6 +119,18 @@ window.onload = function() {
                     position: 'bottom'
                 },
                 {
+                    title: "Text Color",
+                    element: document.querySelector('#text-color-picker'),
+                    intro: "This is where you can change your text color",
+                    position: 'bottom'
+                },
+                {
+                    title: "Background Color",
+                    element: document.querySelector('#bg-color-picker'),
+                    intro: "This is where you can change your background color",
+                    position: 'bottom'
+                },
+                {
                     title: "Resize Gutter",
                     element: document.querySelector('.gutter'),
                     intro: "You can resize this gutter by dragging left or right to adjust the input and preview areas.",
@@ -152,3 +164,46 @@ window.onload = function() {
         }).start();
     }
 };
+
+document.addEventListener('DOMContentLoaded', function () {
+    const pad = document.getElementById('pad');
+    const markdown = document.getElementById('markdown');
+    const themeSwitch = document.getElementById('theme-switch');
+
+    const bgColorPicker = document.getElementById('bg-color-picker');
+    const textColorPicker = document.getElementById('text-color-picker');
+
+    // Convert markdown to HTML
+    const converter = new showdown.Converter();
+    pad.addEventListener('input', function () {
+        markdown.innerHTML = converter.makeHtml(pad.value);
+    });
+
+    // Theme switch toggle
+    themeSwitch.addEventListener('change', function () {
+        if (this.checked) {
+            document.body.classList.add('dark-theme');
+            document.getElementById('theme-label').textContent = 'Dark Mode';
+        } else {
+            document.body.classList.remove('dark-theme');
+            document.getElementById('theme-label').textContent = 'Light Mode';
+        }
+    });
+
+    // Handle background color change
+    bgColorPicker.addEventListener('input', function (event) {
+        document.documentElement.style.setProperty('--background-color', event.target.value);
+        document.documentElement.style.setProperty('--textarea-background', event.target.value);
+        document.documentElement.style.setProperty('--preview-background', event.target.value);
+    });
+
+    // Handle text color change
+    textColorPicker.addEventListener('input', function (event) {
+        document.documentElement.style.setProperty('--text-color', event.target.value);
+    });
+
+    // Set default values for color pickers
+    bgColorPicker.value = '#ffffff'; // Default background color
+    textColorPicker.value = '#000000'; // Default text color
+});
+
