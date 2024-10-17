@@ -1,54 +1,54 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Realtime Markdown Viewer</title>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-        <link href="style.css" rel="stylesheet">
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>Realtime Markdown Viewer</title>
+            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+            <link href="style.css" rel="stylesheet">
 
-        <!-- Intro.js CDN -->
-        <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    </head>
+            <!-- Intro.js CDN -->
+            <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        </head>
 
-    <body class="container-fluid">
+        <body class="container-fluid">
 
-        <!-- Theme Toggle Button -->
-        <div class="theme-toggle d-flex justify-content-between align-items-center">
-            <div class="p-2">
-                Enhance your Markdown experience! &nbsp;&nbsp;&nbsp;
+            <!-- Theme Toggle Button -->
+            <div class="theme-toggle d-flex justify-content-between align-items-center">
+                <div class="p-2">
+                    Enhance your Markdown experience! &nbsp;&nbsp;&nbsp;
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <label class="switch toggle-btn">
+                        <input type="checkbox" id="theme-switch">
+                        <span class="slider round">
+                            <i class="fas fa-sun sun-icon"></i>
+                            <i class="fas fa-moon moon-icon"></i>
+                        </span>
+                    </label>
+                    <span id="theme-label">Light Mode</span>
+                </div>
+                <div class="color-pickers">
+                    <!-- <label for="bg-color-picker">Bg Color</label> -->
+                    <input type="color" id="bg-color-picker" title="Background color">
+                    <!-- <label for="text-color-picker">Txt Color</label> -->
+                    <input type="color" id="text-color-picker" title="Text color">
+                </div>
             </div>
 
-            <div class="d-flex align-items-center">
-                <label class="switch toggle-btn">
-                    <input type="checkbox" id="theme-switch">
-                    <span class="slider round">
-                        <i class="fas fa-sun sun-icon"></i>
-                        <i class="fas fa-moon moon-icon"></i>
-                    </span>
-                </label>
-                <span id="theme-label">Light Mode</span>
+            <div id="split-container">
+                <!-- Markdown Input Area -->
+                <textarea id="pad">Write your text here..</textarea>
+
+                <!-- Markdown Preview Area -->
+                <div id="markdown"></div>
             </div>
-            <div class="color-pickers">
-                <label for="bg-color-picker">Bg Color</label>
-                <input type="color" id="bg-color-picker">
-                <label for="text-color-picker">Txt Color</label>
-                <input type="color" id="text-color-picker">
-            </div>
-        </div>
 
-        <div id="split-container">
-            <!-- Markdown Input Area -->
-            <textarea id="pad">Write your text here..</textarea>
-
-            <!-- Markdown Preview Area -->
-            <div id="markdown"></div>
-        </div>
-
-        <!-- Split.js for resizable panes -->
-        <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
-        <!-- Showdown.js for Markdown conversion -->
-        <script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.2/dist/showdown.min.js"></script>
-        <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
-        <script src="script.js"></script>
-    </body>
-</html>
+            <!-- Split.js for resizable panes -->
+            <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
+            <!-- Showdown.js for Markdown conversion -->
+            <script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.2/dist/showdown.min.js"></script>
+            <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+            <script src="script.js"></script>
+        </body>
+    </html>

@@ -1,12 +1,10 @@
 /* CSS Variables for Themes */
 :root {
-    --background-color: #ffffff;
+    --background-color: #fffffff3;
     --text-color: #000000;
     --textarea-background: #f8f8f8;
-    --preview-background: #ffffff;
+    --preview-background: #f5f4f4;
     --border-color: #cccccc;
-    --markdown-border-top: #000000;
-    --markdown-border-right: #000000;
 
     /* Gutter Colors */
     --gutter-color: #cccccc; /* Light Mode Gutter Color */
@@ -15,13 +13,11 @@
 }
 
 body.dark-theme {
-    --background-color: #2c2c2c;
+    --background-color: #2c2c2ce3;
     --text-color: #f5f5f5;
     --textarea-background: #3c3c3c;
-    --preview-background: #2c2c2c;
+    --preview-background: #343333;
     --border-color: #555555;
-    --markdown-border-top: #f7f3f3;
-    --markdown-border-right: #f7f3f3;
 
     /* Gutter Colors for Dark Mode */
     --gutter-color: #555555;
@@ -36,7 +32,6 @@ html, body {
     padding: 0;
     background-color: var(--background-color);
     color: var(--text-color);
-    /* font-family: Arial, Helvetica, sans-serif; */
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -57,6 +52,7 @@ html, body {
     width: 50px;
     height: 24px;
     margin-right: 10px;
+    margin-top: 5px;
 }
 
 .switch input {
@@ -64,18 +60,6 @@ html, body {
     width: 0;
     height: 0;
 }
-
-/* .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 24px;
-} */
 
 .slider {
     position: absolute;
@@ -178,8 +162,6 @@ input:checked + .slider:before {
     overflow: auto;
     padding: 10px;
     box-sizing: border-box;
-    border-right: 1px dotted var(--markdown-border-right);
-    border-top: 1px dotted var(--markdown-border-top);
     background-color: var(--preview-background);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
@@ -387,17 +369,20 @@ input:checked + .slider:before {
 .color-pickers {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
     margin-left: 8px;
 }
 
 /* Labels for Color Pickers */
-.color-pickers label {
+/* .color-pickers label {
     font-size: 13px;
     color: var(--text-color);
     margin-right: 2px;
-}
+} */
 
+.color-pickers title {
+    border: none;
+}
 /* Customize the Color Input */
 .color-pickers input[type="color"] {
     border: none;
