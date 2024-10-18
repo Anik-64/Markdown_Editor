@@ -108,58 +108,6 @@ window.onload = function() {
         introJs().setOptions({
             dontShowAgain: true, // Enable the "Don't Show Again" checkbox
             steps: [
-                // {
-                //     title: "Welcome",
-                //     intro: "Welcome to the Markdown Viewer!👋"
-                // },
-                // {
-                //     title: "Theme Toggle",
-                //     element: document.querySelector('.toggle-btn'),
-                //     intro: "This is where you can toggle between light and dark mode.",
-                //     position: 'bottom'
-                // },
-                // {
-                //     title: "Text Color",
-                //     element: document.querySelector('#text-color-picker'),
-                //     intro: "This is where you can change your text color",
-                //     position: 'bottom'
-                // },
-                // {
-                //     title: "Background Color",
-                //     element: document.querySelector('#bg-color-picker'),
-                //     intro: "This is where you can change your background color",
-                //     position: 'bottom'
-                // },
-                // {
-                //     title: "Cheat sheet",
-                //     element: document.querySelector('.cheat-sheet-btn'),
-                //     intro: "This is where you can learn about more markdown syntax",
-                //     position: 'bottom'
-                // },
-                // {
-                //     title: "Combined clickable syntax button",
-                //     element: document.querySelector('.toolbar'),
-                //     intro: "Click one of these and get the syntax example",
-                //     position: 'bottom'
-                // },
-                // {
-                //     title: "Resize Gutter",
-                //     element: document.querySelector('.gutter'),
-                //     intro: "You can resize this gutter by dragging left or right to adjust the input and preview areas.",
-                //     position: 'right'
-                // },
-                // {
-                //     title: "Markdown Input",
-                //     element: document.querySelector('#pad'),
-                //     intro: "This is where you can write your Markdown text.",
-                //     position: 'right'
-                // },
-                // {
-                //     title: "Markdown Preview",
-                //     element: document.querySelector('#markdown'),
-                //     intro: "This area shows the preview of your Markdown. Have fun!",
-                //     position: 'left'
-                // }
                 {
                     title: "👋 Welcome to Markdown Viewer!",
                     intro: "Hello there! Let's embark on a quick tour of Markdown Viewer and discover its cool features. Ready? Let's go!"
