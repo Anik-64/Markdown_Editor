@@ -426,7 +426,6 @@ input:checked + .slider:before {
 }
 
 .toolbar a {
-    /* border: 1px solid #000000; */
     border: 1px solid var(--border-color);
     color: var(--cheat-Sheet-text-color);
 }
@@ -460,7 +459,6 @@ input:checked + .slider:before {
 }
 
 .modal-content {
-    /* background-color: white; */
     background-color: var(--modal-content-background);
     padding: 20px;
     border-radius: 5px;
@@ -481,7 +479,6 @@ input:checked + .slider:before {
 }
 
 .close {
-    /* color: red; */
     color: var(--cross-button-color);
     float: right;
     font-size: 28px;
