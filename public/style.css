@@ -5,6 +5,12 @@
     --textarea-background: #f8f8f8;
     --preview-background: #f5f4f4;
     --border-color: #cccccc;
+    --modal-content-background: #f9f9f9;
+    --cross-button-color: #ff0000;
+    --modal-button-text-color: #000000;
+    --italic-text-color: #000000;
+    --cheat-Sheet-text-color: #6b93e9;
+    --border-color: #584444;
 
     /* Gutter Colors */
     --gutter-color: #cccccc; /* Light Mode Gutter Color */
@@ -18,6 +24,12 @@ body.dark-theme {
     --textarea-background: #3c3c3c;
     --preview-background: #343333;
     --border-color: #555555;
+    --modal-content-background: #454647;
+    --cross-button-color: #ffffff;
+    --modal-button-text-color: #000000;
+    --italic-text-color: #000000;
+    --cheat-Sheet-text-color: #ffffff;
+    --border-color: #ffeeee;
 
     /* Gutter Colors for Dark Mode */
     --gutter-color: #555555;
@@ -373,13 +385,6 @@ input:checked + .slider:before {
     margin-left: 8px;
 }
 
-/* Labels for Color Pickers */
-/* .color-pickers label {
-    font-size: 13px;
-    color: var(--text-color);
-    margin-right: 2px;
-} */
-
 .color-pickers title {
     border: none;
 }
@@ -411,3 +416,75 @@ input:checked + .slider:before {
     border: none;
 }
 
+.toolbar {
+    margin-left: 15px;
+    margin-right: 10px;
+}
+
+.toolbar button {
+    margin-right: 5px;
+}
+
+.toolbar a {
+    /* border: 1px solid #000000; */
+    border: 1px solid var(--border-color);
+    color: var(--cheat-Sheet-text-color);
+}
+
+.toolbar a:active {
+  color: var(--cheat-Sheet-text-color); /* Change to desired color when clicked */
+}
+
+.toolbar .italic {
+    color: var(--italic-text-color);
+}
+
+.toolbar a:hover {
+    background-color: #a5d4fa;  
+}
+
+/* Popup modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+}
+
+.modal-content {
+    /* background-color: white; */
+    background-color: var(--modal-content-background);
+    padding: 20px;
+    border-radius: 5px;
+    width: 400px;
+    text-align: center;
+}
+
+.modal-content button {
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    color: var(--modal-button-text-color);
+}
+
+.modal-content button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.close {
+    /* color: red; */
+    color: var(--cross-button-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}

@@ -1,52 +1,93 @@
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <title>Realtime Markdown Viewer</title>
-            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-            <link href="style.css" rel="stylesheet">
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Realtime Markdown Viewer</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+        <link href="style.css" rel="stylesheet">
 
-            <!-- Intro.js CDN -->
-            <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        </head>
+        <!-- Intro.js CDN -->
+        <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
 
-        <body class="container-fluid">
+    <body class="container-fluid">
 
-            <!-- Theme Toggle Button -->
-            <div class="theme-toggle d-flex justify-content-between align-items-center">
-                <div class="p-2">
-                    Enhance your Markdown experience! &nbsp;&nbsp;&nbsp;
-                </div>
-
-                <div class="d-flex align-items-center">
-                    <label class="switch toggle-btn">
-                        <input type="checkbox" id="theme-switch">
-                        <span class="slider round">
-                            <i class="fas fa-sun sun-icon"></i>
-                            <i class="fas fa-moon moon-icon"></i>
-                        </span>
-                    </label>
-                    <span id="theme-label">Light Mode</span>
-                </div>
-                <div class="color-pickers">
-                    <input type="color" id="bg-color-picker" title="Background color">
-                    <input type="color" id="text-color-picker" title="Text color">
-                </div>
+        <!-- Theme Toggle Button -->
+        <div class="theme-toggle d-flex justify-content-between align-items-center">
+            
+            <div class="pr-2">
+                Enhance your Markdown experience! 
             </div>
 
-            <div id="split-container">
-                <!-- Markdown Input Area -->
-                <textarea id="pad">Write your text here..</textarea>
-
-                <!-- Markdown Preview Area -->
-                <div id="markdown"></div>
+            <!-- Toolbar with Buttons for Markdown Formatting -->
+            <div id="toolbar" class="toolbar">
+                <button onclick="applyBold()" class="btn btn-primary" title="Bold">
+                    <i class="fas fa-bold"></i> Bold
+                </button>
+                <button onclick="applyItalic()" class="btn btn-secondary italic" title="Italic">
+                    <i class="fas fa-italic"></i> Italic
+                </button>
+                <button onclick="applyHeader()" class="btn btn-info" title="Header">
+                    <i class="fas fa-heading"></i> Header
+                </button>
+                <button onclick="applyList()" class="btn btn-warning" title="List">
+                    <i class="fas fa-list"></i> List
+                </button>
+                <button onclick="applyLink()" class="btn btn-success" title="Link">
+                    <i class="fas fa-link"></i> Link
+                </button>
+                <button onclick="openModal()" class="btn btn-danger" title="More">More</button>
+                <a href="https://guides.github.com/features/mastering-markdown/" target="_blank" class="btn cheat-sheet-btn">Markdown Cheat Sheet</a>
             </div>
 
-            <!-- Split.js for resizable panes -->
-            <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
-            <!-- Showdown.js for Markdown conversion -->
-            <script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.2/dist/showdown.min.js"></script>
-            <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
-            <script src="script.js"></script>
-        </body>
-    </html>
+            <!-- Toggle button -->
+            <div class="d-flex align-items-center">
+                <label class="switch toggle-btn">
+                    <input type="checkbox" id="theme-switch">
+                    <span class="slider round">
+                        <i class="fas fa-sun sun-icon"></i>
+                        <i class="fas fa-moon moon-icon"></i>
+                    </span>
+                </label>
+                <span id="theme-label">Light Mode</span>
+            </div>
+            <div class="color-pickers">
+                <input type="color" id="bg-color-picker" title="Background color">
+                <input type="color" id="text-color-picker" title="Text color">
+            </div>
+        </div>
+
+        <div id="split-container">
+            <!-- Markdown Input Area -->
+            <textarea id="pad">Write your text here..</textarea>
+
+            <!-- Markdown Preview Area -->
+            <div id="markdown"></div>
+        </div>
+
+        <!-- Modal for more Markdown options -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Markdown Options</h2>
+                <button onclick="applyCode()">Code Block</button>
+                <button onclick="applyImage()">Image</button>
+                <button onclick="applyQuote()">Quote</button>
+                <button onclick="applySubscript()">Subscript</button>
+                <button onclick="applyInlineCode()">Inline Code</button>
+                <button onclick="applyOrderedList()">Ordered List</button>
+                <button onclick="applySubList()">Sub List</button>
+                <button onclick="applyHorizontalRule()">Horizontal Rule</button>
+                <button onclick="applyTaskList()">Task List</button>
+            </div>
+        </div>
+
+        
+        <!-- Split.js for resizable panes -->
+        <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
+        <!-- Showdown.js for Markdown conversion -->
+        <script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.2/dist/showdown.min.js"></script>
+        <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>

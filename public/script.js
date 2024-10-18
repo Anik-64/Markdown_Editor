@@ -108,44 +108,108 @@ window.onload = function() {
         introJs().setOptions({
             dontShowAgain: true, // Enable the "Don't Show Again" checkbox
             steps: [
+                // {
+                //     title: "Welcome",
+                //     intro: "Welcome to the Markdown Viewer!👋"
+                // },
+                // {
+                //     title: "Theme Toggle",
+                //     element: document.querySelector('.toggle-btn'),
+                //     intro: "This is where you can toggle between light and dark mode.",
+                //     position: 'bottom'
+                // },
+                // {
+                //     title: "Text Color",
+                //     element: document.querySelector('#text-color-picker'),
+                //     intro: "This is where you can change your text color",
+                //     position: 'bottom'
+                // },
+                // {
+                //     title: "Background Color",
+                //     element: document.querySelector('#bg-color-picker'),
+                //     intro: "This is where you can change your background color",
+                //     position: 'bottom'
+                // },
+                // {
+                //     title: "Cheat sheet",
+                //     element: document.querySelector('.cheat-sheet-btn'),
+                //     intro: "This is where you can learn about more markdown syntax",
+                //     position: 'bottom'
+                // },
+                // {
+                //     title: "Combined clickable syntax button",
+                //     element: document.querySelector('.toolbar'),
+                //     intro: "Click one of these and get the syntax example",
+                //     position: 'bottom'
+                // },
+                // {
+                //     title: "Resize Gutter",
+                //     element: document.querySelector('.gutter'),
+                //     intro: "You can resize this gutter by dragging left or right to adjust the input and preview areas.",
+                //     position: 'right'
+                // },
+                // {
+                //     title: "Markdown Input",
+                //     element: document.querySelector('#pad'),
+                //     intro: "This is where you can write your Markdown text.",
+                //     position: 'right'
+                // },
+                // {
+                //     title: "Markdown Preview",
+                //     element: document.querySelector('#markdown'),
+                //     intro: "This area shows the preview of your Markdown. Have fun!",
+                //     position: 'left'
+                // }
                 {
-                    title: "Welcome",
-                    intro: "Welcome to the Markdown Viewer!👋"
+                    title: "👋 Welcome to Markdown Viewer!",
+                    intro: "Hello there! Let's embark on a quick tour of Markdown Viewer and discover its cool features. Ready? Let's go!"
                 },
                 {
-                    title: "Theme Toggle",
+                    title: "🌗 Switch Themes Effortlessly!",
                     element: document.querySelector('.toggle-btn'),
-                    intro: "This is where you can toggle between light and dark mode.",
+                    intro: "Feeling the need for a change? Toggle between light and dark mode to suit your mood. Give it a try!",
                     position: 'bottom'
                 },
                 {
-                    title: "Text Color",
+                    title: "🎨 Customize Your Text Color",
                     element: document.querySelector('#text-color-picker'),
-                    intro: "This is where you can change your text color",
+                    intro: "Want your text to pop with some color? Pick your favorite shade and watch your text come to life!",
                     position: 'bottom'
                 },
                 {
-                    title: "Background Color",
+                    title: "🖼️ Set Your Background Mood",
                     element: document.querySelector('#bg-color-picker'),
-                    intro: "This is where you can change your background color",
+                    intro: "A good background sets the tone! Select a background color that feels just right for you.",
                     position: 'bottom'
                 },
                 {
-                    title: "Resize Gutter",
+                    title: "📖 Markdown Cheat Sheet",
+                    element: document.querySelector('.cheat-sheet-btn'),
+                    intro: "New to Markdown? Don’t worry! Click here to access a handy cheat sheet and master Markdown syntax quickly!",
+                    position: 'bottom'
+                },
+                {
+                    title: "🎯 Clickable Markdown Shortcuts",
+                    element: document.querySelector('.toolbar'),
+                    intro: "Speed up your writing by using these quick formatting buttons. Just click, and the correct Markdown syntax will appear for you!",
+                    position: 'bottom'
+                },
+                {
+                    title: "↔️ Resizable Gutter",
                     element: document.querySelector('.gutter'),
-                    intro: "You can resize this gutter by dragging left or right to adjust the input and preview areas.",
+                    intro: "Need more space to preview or write? Simply drag this gutter left or right to adjust the size of the input and preview areas.",
                     position: 'right'
                 },
                 {
-                    title: "Markdown Input",
+                    title: "✍️ Write Your Markdown",
                     element: document.querySelector('#pad'),
-                    intro: "This is where you can write your Markdown text.",
+                    intro: "This is your creative canvas! Type your Markdown here, and see it beautifully transformed into formatted text instantly.",
                     position: 'right'
                 },
                 {
-                    title: "Markdown Preview",
+                    title: "🔍 Live Markdown Preview",
                     element: document.querySelector('#markdown'),
-                    intro: "This area shows the preview of your Markdown. Have fun!",
+                    intro: "Here's where the magic happens! As you type, watch your Markdown transform in real time. Enjoy the smooth preview!",
                     position: 'left'
                 }
             ]
@@ -207,3 +271,109 @@ document.addEventListener('DOMContentLoaded', function () {
     textColorPicker.value = '#000000'; // Default text color
 });
 
+// New toolbar and markdown conversion logic
+document.addEventListener('DOMContentLoaded', function() {
+    const converter = new showdown.Converter();
+    const pad = document.getElementById('pad');
+    const markdownArea = document.getElementById('markdown');
+    const modal = document.getElementById('modal');
+
+    // Markdown conversion on input
+    pad.addEventListener('input', updateMarkdown);
+
+    function updateMarkdown() {
+        const markdownText = pad.value;
+        markdownArea.innerHTML = converter.makeHtml(markdownText);
+    }
+
+    // Markdown Toolbar Functions
+    function insertAtCursor(text) {
+        const start = pad.selectionStart;
+        const end = pad.selectionEnd;
+        const padText = pad.value;
+        pad.value = padText.substring(0, start) + text + padText.substring(end);
+        pad.focus();
+        updateMarkdown();
+    }
+
+    window.applyBold = function() {
+        insertAtCursor('**bold text**');
+    };
+
+    window.applyItalic = function() {
+        insertAtCursor('_italic text_');
+    };
+
+    window.applyHeader = function() {
+        insertAtCursor('# Heading 1\n');
+    };
+
+    window.applyList = function() {
+        insertAtCursor('- List item\n');
+    };
+
+    window.applyLink = function() {
+        insertAtCursor('[link](http://example.com)');
+    };
+
+    window.applyCode = function() {
+        insertAtCursor('```\nCode block\n```');
+        modal.style.display = "none";
+    };
+
+    window.applyImage = function() {
+        insertAtCursor('![alt text](http://image-url.com)');
+        modal.style.display = "none";
+    };
+
+    window.applyQuote = function() {
+        insertAtCursor('> Blockquote');
+        modal.style.display = "none";
+    };
+
+    window.applySubscript = function() {
+        insertAtCursor('<sub>subscript</sub>');
+        modal.style.display = "none";
+    };
+
+    window.applyInlineCode = function() {
+        insertAtCursor('`inline code`');
+        modal.style.display = "none";
+    };
+
+    window.applyOrderedList = function() {
+        insertAtCursor('1. Ordered item\n2. Ordered item\n');
+        modal.style.display = "none";
+    };
+
+    window.applySubList = function() {
+        insertAtCursor('- Main item\n  - Sub-item\n');
+        modal.style.display = "none";
+    };
+
+    window.applyHorizontalRule = function() {
+        insertAtCursor('---\n');
+        modal.style.display = "none";
+    };
+
+    window.applyTaskList = function() {
+        insertAtCursor('- [ ] Task\n- [x] Completed task\n');
+        modal.style.display = "none";
+    };
+
+    // Modal controls
+    window.openModal = function() {
+        modal.style.display = 'flex';
+    };
+
+    window.closeModal = function() {
+        modal.style.display = 'none';
+    };
+
+    // Close the modal if the user clicks outside the modal
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    };
+});
