@@ -13,10 +13,6 @@ window.onload = function() {
             // Save sizes to localStorage when dragging ends
             localStorage.setItem('split-sizes', JSON.stringify(sizes));
         },
-        onDrag: function(direction, sizes, gutterElement) {
-            // Add dragging class when dragging starts
-            gutterElement.classList.add('dragging');
-        }
     });
 
     // Remove dragging class on mouseup

@@ -149,9 +149,9 @@ input:checked + .slider:before {
 /* Split container styling */
 #split-container {
     display: flex;
-    height: 100vh; /* Full viewport height */
+    height: 100vh; 
     width: 100%;
-    padding-top: 50px; /* Space for the toggle button */
+    padding-top: 50px; 
     box-sizing: border-box;
 }
 
@@ -177,6 +177,11 @@ input:checked + .slider:before {
     background-color: var(--preview-background);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
+}
+
+#markdown p img {
+    max-width: 800px;
+    max-height: 400px;
 }
 
 /* Enhanced Gutter Styling */
