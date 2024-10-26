@@ -305,6 +305,11 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = "none";
     };
 
+    window.applyBanner = function() {
+        insertAtCursor("![MasterHead](http://image-url.gif)\n");
+        modal.style.display = "none";
+    };
+
     // Modal controls
     window.openModal = function() {
         modal.style.display = 'flex';
