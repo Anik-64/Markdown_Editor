@@ -139,6 +139,12 @@ window.onload = function() {
                     position: 'bottom'
                 },
                 {
+                    title: "💾 Download Your Work",
+                    element: document.querySelector('.download-btn'),
+                    intro: "Ready to save your masterpiece? Click this button to download your Markdown text as a .md file.",
+                    position: 'bottom'
+                },
+                {
                     title: "↔️ Resizable Gutter",
                     element: document.querySelector('.gutter'),
                     intro: "Need more space to preview or write? Simply drag this gutter left or right to adjust the size of the input and preview areas.",
@@ -326,3 +332,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 });
+
+// Download content
+function downloadMarkdown() {
+    // Get the Markdown content from the textarea
+    const markdownContent = document.getElementById('pad').value;
+
+    // Create a Blob with the Markdown content
+    const blob = new Blob([markdownContent], { type: 'text/markdown' });
+
+    // Create a temporary anchor element to trigger the download
+    const anchor = document.createElement('a');
+    anchor.href = URL.createObjectURL(blob);
+    anchor.download = 'document.md'; // Default filename
+    anchor.style.display = 'none';
+
+    // Append the anchor to the document, trigger the click, and remove it
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+}

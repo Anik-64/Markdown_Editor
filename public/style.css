@@ -11,6 +11,7 @@
     --italic-text-color: #000000;
     --cheat-Sheet-text-color: #6b93e9;
     --border-color: #584444;
+    --download-incon-color: #000000;
 
     /* Gutter Colors */
     --gutter-color: #cccccc; /* Light Mode Gutter Color */
@@ -30,6 +31,7 @@ body.dark-theme {
     --italic-text-color: #000000;
     --cheat-Sheet-text-color: #ffffff;
     --border-color: #ffeeee;
+    --download-incon-color: #000000;
 
     /* Gutter Colors for Dark Mode */
     --gutter-color: #555555;
@@ -63,7 +65,7 @@ html, body {
     display: inline-block;
     width: 50px;
     height: 24px;
-    margin-right: 10px;
+    margin-right: 4px;
     margin-top: 5px;
 }
 
@@ -388,6 +390,7 @@ input:checked + .slider:before {
     align-items: center;
     gap: 10px;
     margin-left: 8px;
+    margin-right: 8px;
 }
 
 .color-pickers title {
@@ -489,4 +492,8 @@ input:checked + .slider:before {
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+}
+
+.fa-download {
+    color: var(--download-incon-color);
 }
