@@ -12,6 +12,7 @@ pipeline {
         ECS_CLUSTER = "MyCluster"
         ECS_SERVICE = "myTaskDefinitioin-service"
         TASK_FAMILY = "myTaskDefinitioin"
+        EXECUTION_ROLE_ARN = "arn:aws:iam::723609008287:role/ecsTaskExecutionRole"
     }
 
     stages {
@@ -38,26 +39,35 @@ pipeline {
                     script {
                         // Fetch the latest task definition
                         def taskDef = sh(script: "aws ecs describe-task-definition --region ${AWS_REGION} --task-definition ${TASK_FAMILY} --query taskDefinition", returnStdout: true).trim()
-                        
-                        // Parse JSON and update the image tag
                         def taskDefJson = readJSON text: taskDef
-                        taskDefJson.containerDefinitions[0].image = "${env.username}/${DOCKER_IMAGE}:${DOCKER_TAG}"
-                        
-                        // Remove unnecessary fields for registration 
+                        // Set image as a string
+                        taskDefJson.containerDefinitions[0].image = "${env.DOCKER_USERNAME}/${DOCKER_IMAGE}:${DOCKER_TAG}"
+                        // Fix compatibilities field
+                        if (taskDefJson.containsKey('compatibilities')) {
+                            taskDefJson.requiresCompatibilities = ['FARGATE']
+                            taskDefJson.remove('compatibilities')
+                        } else {
+                            taskDefJson.requiresCompatibilities = ['FARGATE']
+                        }
+                        // Ensure Fargate-specific fields
+                        taskDefJson.networkMode = 'awsvpc'
+                        taskDefJson.cpu = '256'
+                        taskDefJson.memory = '512'
+                        taskDefJson.executionRoleArn = "${EXECUTION_ROLE_ARN}"
+                        // Remove unnecessary fields
                         taskDefJson.remove('taskDefinitionArn')
                         taskDefJson.remove('revision')
                         taskDefJson.remove('status')
                         taskDefJson.remove('requiresAttributes')
                         taskDefJson.remove('registeredAt')
                         taskDefJson.remove('registeredBy')
-
-                        // Write updated task definition to a file
+                        // Debug: Print JSON
+                        echo "Task Definition JSON: ${taskDefJson.toString()}"
+                        // Write updated task definition
                         writeJSON file: 'task-definition.json', json: taskDefJson
-
-                        // Register new task definition revision
+                        // Register new task definition
                         def newTaskDefArn = sh(script: "aws ecs register-task-definition --region ${AWS_REGION} --cli-input-json file://task-definition.json --query taskDefinition.taskDefinitionArn --output text", returnStdout: true).trim()
-
-                        // Update ECS service with new task definition and force redeployment 
+                        // Update ECS service
                         sh """
                             aws ecs update-service \
                                 --region ${AWS_REGION} \
