@@ -4,7 +4,8 @@
   "description": "This is a markdown editor where normal text will be converted into .md file structure",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index",
+    "dev": "nodemon index"
   },
   "repository": {
     "type": "git",
