@@ -43,7 +43,7 @@ pipeline {
                         def taskDefJson = readJSON text: taskDef
                         taskDefJson.containerDefinitions[0].image = "${env.username}/${DOCKER_IMAGE}:${DOCKER_TAG}"
                         
-                        // Remove unnecessary fields for registration
+                        // Remove unnecessary fields for registration 
                         taskDefJson.remove('taskDefinitionArn')
                         taskDefJson.remove('revision')
                         taskDefJson.remove('status')
