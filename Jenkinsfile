@@ -57,7 +57,7 @@ pipeline {
                         // Register new task definition revision
                         def newTaskDefArn = sh(script: "aws ecs register-task-definition --region ${AWS_REGION} --cli-input-json file://task-definition.json --query taskDefinition.taskDefinitionArn --output text", returnStdout: true).trim()
 
-                        // Update ECS service with new task definition and force redeployment
+                        // Update ECS service with new task definition and force redeployment 
                         sh """
                             aws ecs update-service \
                                 --region ${AWS_REGION} \
