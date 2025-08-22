@@ -39,25 +39,35 @@ pipeline {
                     script {
                         try {
                             // Fetch the latest task definition
+                            // Fetch the latest task definition
                             def taskDef = sh(script: "aws ecs describe-task-definition --region ${AWS_REGION} --task-definition ${TASK_FAMILY} --query taskDefinition", returnStdout: true).trim()
                             def taskDefJson = readJSON text: taskDef
-                            // Explicitly set image and executionRoleArn as strings
-                            taskDefJson.containerDefinitions[0].image = "${env.DOCKER_USERNAME}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG}".toString()
-                            taskDefJson.executionRoleArn = "${env.EXECUTION_ROLE_ARN}".toString()
+                            // Set image and executionRoleArn as strings
+                            taskDefJson.containerDefinitions[0].image = "${env.DOCKER_USERNAME}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
+                            taskDefJson.executionRoleArn = "${env.EXECUTION_ROLE_ARN}"
                             // Ensure Fargate-specific fields
                             taskDefJson.networkMode = 'awsvpc'
                             taskDefJson.cpu = '256'
                             taskDefJson.memory = '512'
                             taskDefJson.requiresCompatibilities = ['FARGATE']
+                            // Preserve existing configurations (e.g., logConfiguration, environment)
+                            if (!taskDefJson.containerDefinitions[0].logConfiguration) {
+                                taskDefJson.containerDefinitions[0].logConfiguration = [
+                                    logDriver: 'awslogs',
+                                    options: [
+                                        'awslogs-group': '/ecs/myTaskDefinitioin',
+                                        'awslogs-create-group': 'true',
+                                        'awslogs-region': 'ap-south-1',
+                                        'awslogs-stream-prefix': 'ecs'
+                                    ]
+                                ]
+                            }
                             // Remove unnecessary fields
-                            taskDefJson.remove('taskDefinitionArn')
-                            taskDefJson.remove('revision')
-                            taskDefJson.remove('status')
-                            taskDefJson.remove('requiresAttributes')
-                            taskDefJson.remove('registeredAt')
-                            taskDefJson.remove('registeredBy')
+                            ['taskDefinitionArn', 'revision', 'status', 'requiresAttributes', 'registeredAt', 'registeredBy', 'compatibilities'].each { key ->
+                                taskDefJson.remove(key)
+                            }
                             // Debug: Print JSON
-                            echo "Task Definition JSON: ${taskDefJson.toString()}"
+                            echo "Task Definition JSON: ${taskDefJson}"
                             // Write updated task definition
                             writeJSON file: 'task-definition.json', json: taskDefJson
                             // Debug: Print the written JSON file
