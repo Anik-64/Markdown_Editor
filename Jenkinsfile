@@ -38,37 +38,46 @@ pipeline {
                 withCredentials([aws(credentialsId: 'aws', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
                         try {
-                            // Fetch the latest task definition
-                            // Fetch the latest task definition
-                            def taskDef = sh(script: "aws ecs describe-task-definition --region ${AWS_REGION} --task-definition ${TASK_FAMILY} --query taskDefinition", returnStdout: true).trim()
-                            def taskDefJson = readJSON text: taskDef
-                            // Set image and executionRoleArn as strings
-                            taskDefJson.containerDefinitions[0].image = "${env.DOCKER_USERNAME}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
-                            taskDefJson.executionRoleArn = "${env.EXECUTION_ROLE_ARN}"
-                            // Ensure Fargate-specific fields
-                            taskDefJson.networkMode = 'awsvpc'
-                            taskDefJson.cpu = '256'
-                            taskDefJson.memory = '512'
-                            taskDefJson.requiresCompatibilities = ['FARGATE']
-                            // Preserve existing configurations (e.g., logConfiguration, environment)
-                            if (!taskDefJson.containerDefinitions[0].logConfiguration) {
-                                taskDefJson.containerDefinitions[0].logConfiguration = [
-                                    logDriver: 'awslogs',
-                                    options: [
-                                        'awslogs-group': '/ecs/myTaskDefinitioin',
-                                        'awslogs-create-group': 'true',
-                                        'awslogs-region': 'ap-south-1',
-                                        'awslogs-stream-prefix': 'ecs'
+                            // Construct task definition JSON from scratch
+                            def taskDefJson = [
+                                family: "${env.TASK_FAMILY}",
+                                containerDefinitions: [
+                                    [
+                                        name: "markdown",
+                                        image: "${env.DOCKER_USERNAME}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG}",
+                                        cpu: 256,
+                                        memory: 512,
+                                        essential: true,
+                                        portMappings: [
+                                            [
+                                                containerPort: 3005,
+                                                hostPort: 3005,
+                                                protocol: "tcp"
+                                            ]
+                                        ],
+                                        environment: [
+                                            [name: "PORT", value: "3005"]
+                                        ],
+                                        logConfiguration: [
+                                            logDriver: "awslogs",
+                                            options: [
+                                                "awslogs-group": "/ecs/${env.TASK_FAMILY}",
+                                                "awslogs-create-group": "true",
+                                                "awslogs-region": "${env.AWS_REGION}",
+                                                "awslogs-stream-prefix": "ecs"
+                                            ]
+                                        ]
                                     ]
-                                ]
-                            }
-                            // Remove unnecessary fields
-                            ['taskDefinitionArn', 'revision', 'status', 'requiresAttributes', 'registeredAt', 'registeredBy', 'compatibilities'].each { key ->
-                                taskDefJson.remove(key)
-                            }
+                                ],
+                                requiresCompatibilities: ["FARGATE"],
+                                networkMode: "awsvpc",
+                                cpu: "256",
+                                memory: "512",
+                                executionRoleArn: "${env.EXECUTION_ROLE_ARN}"
+                            ]
                             // Debug: Print JSON
                             echo "Task Definition JSON: ${taskDefJson}"
-                            // Write updated task definition
+                            // Write task definition to file
                             writeJSON file: 'task-definition.json', json: taskDefJson
                             // Debug: Print the written JSON file
                             sh 'cat task-definition.json'
