@@ -177,3 +177,5 @@ Triggered only on **PR merges (dev → main)** via GitHub webhook.
 5. **Create a Pipeline Job**  
    - Link to the GitHub repository  
    - Enable **Generic Webhook Trigger** with specified variables  
+
+![Pipeline Diagram](public/images/Deploy to ecs diagram.png)
