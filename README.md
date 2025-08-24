@@ -152,6 +152,13 @@ Triggered only on **PR merges (dev → main)** via GitHub webhook.
 
 ## 🚀 Jenkins Setup
 
+1. **Install AWS CLI to jenkins EC2**
+    - `sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"`
+    - `sudo apt install unzip`
+    - `sudo unzip awscliv2.zip`
+    - `sudo ./aws/install`
+    - `aws --version`
+
 1. **Access Jenkins**  
    - URL: `http://<ec2-public-ip>:8080`
 
