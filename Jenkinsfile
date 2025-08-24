@@ -120,7 +120,7 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed. Check logs for details.'
-            emailext body: 'Pipeline failed', subject: 'Failed', to: 'anikmajumder303@gmail.com'
+            emailext body: 'Pipeline failed', subject: 'Failed', to: 'anikmajumder303@gmail.com' 
         }
     }
 }
