@@ -10,8 +10,8 @@ pipeline {
         DOCKER_IMAGE = "markdown"
         AWS_REGION = "ap-south-1" 
         ECS_CLUSTER = "MyCluster"
-        ECS_SERVICE = "myTaskDefinitioin-service"
-        TASK_FAMILY = "myTaskDefinitioin"
+        ECS_SERVICE = "myTaskDefinition-service"
+        TASK_FAMILY = "myTaskDefinition"
         EXECUTION_ROLE_ARN = "arn:aws:iam::723609008287:role/ecsTaskExecutionRole"
     }
 
@@ -116,9 +116,11 @@ pipeline {
         }
         success {
             echo 'Pipeline completed successfully!'
+            emailext body: 'Pipeline successful and Host to ECS', subject: 'Success', to: 'anikmajumder303@gmail.com'
         }
         failure {
             echo 'Pipeline failed. Check logs for details.'
+            emailext body: 'Pipeline failed', subject: 'Failed', to: 'anikmajumder303@gmail.com'
         }
     }
 }
