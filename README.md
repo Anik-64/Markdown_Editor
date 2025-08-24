@@ -24,4 +24,152 @@ Whether you're a developer documenting code, a writer drafting articles, or anyo
 - **Students and Professionals:** Take notes or create formatted documents quickly.
 
 ---
-Start using the Real-Time Markdown Editor today and streamline your Markdown writing process!
+
+# Markdown App CI/CD Pipeline
+
+## 📌 Project Summary
+This project implements a **CI/CD pipeline** to automate the deployment of a **Markdown microservice** to **AWS Elastic Container Service (ECS)** using **Jenkins, Docker, and Docker Hub**.  
+
+The pipeline:
+- Triggers when a **pull request from `dev` branch is merged into `main`** (via Generic Webhook Trigger).
+- Builds and pushes a Docker image to **Docker Hub**.
+- Updates the **ECS task definition** with the new image version.
+- Redeploys the ECS service using rolling updates.
+- Sends **email notifications via AWS SES** on success or failure.
+
+---
+
+## 🎯 Objectives
+- Automate the build, push, and deployment of a Dockerized Node.js microservice to **AWS ECS**.
+- Ensure **zero-downtime deployments** with ECS rolling updates and **Application Load Balancer (ALB)**.
+- Integrate **GitHub webhooks** for merge-based triggers.
+- Provide **email notifications** using **AWS SES**.
+- Demonstrate modern DevOps practices: containerization, orchestration, CI/CD.
+
+---
+
+## 🏗 Architecture
+- **CI/CD:** Jenkins pipeline on AWS EC2, triggered by GitHub PR merges.
+- **Containerization:** Docker image pushed to Docker Hub  
+  Format: `<username>/markdown:<BUILD_NUMBER>`.
+- **Orchestration:** AWS ECS (Fargate) + ALB load balancing across 2–4 tasks.
+- **Notifications:** AWS SES sends success/failure emails to `anikmajumder303@gmail.com`.
+
+---
+
+## Prerequisites
+
+### AWS EC2 Instance
+- **OS:** Amazon Linux 2 with Jenkins, Docker, and AWS CLI installed.  
+- **Instance Type:** Minimum `t3.medium` (2 vCPUs, 4GB RAM).  
+- **User Permissions:** Add Jenkins user to Docker group:  
+  ```bash
+  sudo usermod -aG docker jenkins
+  ```  
+- **Security Groups**: Open port `8080` (Jenkins) and `3005` (App via ALB).  
+
+---
+
+## 🔧 Prerequisites
+- **Security Groups**: Open port `8080` (Jenkins) and `3005` (App via ALB).  
+- **Jenkins Plugins**:     
+  - Generic Webhook Trigger  
+  - AWS Credentials  
+  - Pipeline Utility Steps  
+  - Extended E-mail Notification  
+
+- **Jenkins Credentials**:  
+  - `dockerhub`: Docker Hub username/password  
+  - `aws`: AWS Access Key ID/Secret Access Key (with ECS + SES permissions)  
+
+---
+
+## ☁️ AWS Setup
+### ECS
+- Cluster: **MyCluster**
+- Task Definition: **myTaskDefinition** (Fargate, 256 CPU, 512 MB memory, port 3005, `awslogs`)
+- Service: **myTaskDefinition-service** (2–4 tasks, ALB, auto-scaling at 70% CPU)
+
+### ALB
+- Load Balancer: **markdown-alb**  
+- Target Group: **markdown-tg** (port 3005, health check `/`)  
+
+### SES
+- Verified email: `anikmajumder303@gmail.com`  
+- Move out of sandbox mode for production.  
+
+### IAM
+- Role: **ecsTaskExecutionRole** with `AmazonECSTaskExecutionRolePolicy` and CloudWatch Logs permissions.  
+- AWS credentials (`aws`) require:  
+  - `ecs:*`  
+  - `logs:*`  
+  - `ses:SendEmail`  
+
+---
+
+## 🔄 Pipeline Workflow
+Defined in **Jenkinsfile**:
+
+1. **Build**:  
+   - Docker image `<username>/markdown:<BUILD_NUMBER>`  
+2. **Push**:  
+   - Push to Docker Hub (`dockerhub` credentials)  
+3. **Deploy to ECS**:  
+   - Create new task definition revision  
+   - Register with `aws ecs register-task-definition`  
+   - Update ECS service → rolling redeploy  
+4. **Logout**:  
+   - Docker Hub logout  
+5. **Finish**:  
+   - Mark pipeline complete  
+6. **Post Actions**:  
+   - Email notification via AWS SES (success/failure)  
+
+---
+
+## ⚡ Webhook Trigger
+Triggered only on **PR merges (dev → main)** via GitHub webhook.
+- **Webhook URL**: `http://<jenkins-url>:8080/generic-webhook-trigger/invoke`  
+- **Events**: Pull Request (merged)  
+
+- **Trigger Variables**:  
+- `action`: `$.action` → expects `closed`  
+- `merged`: `$.pull_request.merged` → expects `true`  
+- `head_ref`: `$.pull_request.head.ref` → expects `dev`  
+- `base_ref`: `$.pull_request.base.ref` → expects `main`  
+
+---
+
+## 🛠️ Setup Instructions
+### 1. AWS Configuration
+- Create ECS Cluster (**MyCluster**) with Fargate.  
+- Define Task (`myTaskDefinition`) and Service (`myTaskDefinition-service`).  
+- Setup ALB + Target Group.  
+- Verify SES email & configure IAM roles.  
+- Configure AWS CLI: aws configure
+
+---
+
+## 🚀 Jenkins Setup
+
+1. **Access Jenkins**  
+   - URL: `http://<ec2-public-ip>:8080`
+
+2. **Install Required Plugins**  
+   - Generic Webhook Trigger  
+   - AWS Credentials  
+   - Pipeline Utility Steps  
+   - Extended E-mail Notification  
+
+3. **Add Credentials**  
+   - `dockerhub`: Docker Hub username/password  
+   - `aws`: AWS Access Key ID / Secret Access Key  
+
+4. **Configure Extended E-mail Notification**  
+   - **SMTP Server**: `email-smtp.ap-south-1.amazonaws.com`  
+   - **Credentials**: Use AWS SES SMTP username/password  
+   - **Default Recipients**: `anikmajumder303@gmail.com`  
+
+5. **Create a Pipeline Job**  
+   - Link to the GitHub repository  
+   - Enable **Generic Webhook Trigger** with specified variables  
