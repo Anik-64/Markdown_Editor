@@ -178,4 +178,4 @@ Triggered only on **PR merges (dev → main)** via GitHub webhook.
    - Link to the GitHub repository  
    - Enable **Generic Webhook Trigger** with specified variables  
 
-![Pipeline Diagram](public/images/Deploy to ecs diagram.png)
+![Pipeline Diagram](https://firebasestorage.googleapis.com/v0/b/alleventsair.appspot.com/o/files%2Fimages%2Fsb8Ng_1756033644116.png?alt=media&token=5c9f6191-41dd-4d9b-9c51-bd9e91439b7b)
