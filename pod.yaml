@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: beekeeper27/markdown:v2
+    env:
+    - name: PORT
+      value: "3000"
