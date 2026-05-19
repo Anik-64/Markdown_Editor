@@ -7,9 +7,12 @@ Whether you're a developer documenting code, a writer drafting articles, or anyo
 ## Features
 
 - **Real-Time Preview:** See your Markdown render as you type, eliminating the need to switch between editor and viewer.
-- **Interactive Interface:** A clean, intuitive UI for writing and formatting text with Markdown syntax.
+- **Advanced Editing:** Powered by **Monaco Editor**, offering syntax highlighting, robust formatting, and an exceptional writing experience.
+- **Modern UI:** A clean, responsive interface built with **Tailwind CSS**, featuring built-in Dark/Light mode and mobile-friendly tabs.
+- **PDF Export:** Download your rendered Markdown documents directly to PDF without layout artifacts.
+- **Auto-Save:** Never lose your work—content is automatically saved to local storage as you type.
+- **Secure Backend:** Hardened with Helmet and rate-limiting to ensure safe and robust performance.
 - **Cross-Platform Compatibility:** Works seamlessly in modern browsers on desktops, tablets, and mobile devices.
-- **Built with Node.js:** Fast, efficient, and scalable backend technology ensures a smooth user experience.
 
 ## Why Use This Editor?
 

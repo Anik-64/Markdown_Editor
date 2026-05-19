@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-brand-light text-brand-dark transition-colors duration-300;
+  }
+  
+  html.dark body {
+    @apply bg-slate-900 text-slate-100;
+  }
+}
+
+/* Custom scrollbar for Monaco and markdown preview */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  @apply bg-slate-700;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-600;
+}
+
+/* Markdown specific styles */
+.markdown-body {
+  @apply font-sans leading-relaxed text-slate-800 break-words;
+}
+
+html.dark .markdown-body {
+  @apply text-slate-200;
+}
+
+.markdown-body h1 {
+  @apply text-4xl font-bold mb-6 mt-8 pb-2 border-b border-slate-200;
+}
+
+html.dark .markdown-body h1 {
+  @apply border-slate-700;
+}
+
+.markdown-body h2 {
+  @apply text-3xl font-semibold mb-5 mt-8 pb-2 border-b border-slate-200;
+}
+
+html.dark .markdown-body h2 {
+  @apply border-slate-700;
+}
+
+.markdown-body h3 {
+  @apply text-2xl font-semibold mb-4 mt-6;
+}
+
+.markdown-body h4 {
+  @apply text-xl font-semibold mb-4 mt-6;
+}
+
+.markdown-body p {
+  @apply mb-4;
+}
+
+.markdown-body ul {
+  @apply list-disc list-inside mb-4 pl-4;
+}
+
+.markdown-body ol {
+  @apply list-decimal list-inside mb-4 pl-4;
+}
+
+.markdown-body li {
+  @apply mb-1;
+}
+
+.markdown-body a {
+  @apply text-blue-600 hover:underline;
+}
+
+html.dark .markdown-body a {
+  @apply text-blue-400;
+}
+
+.markdown-body code {
+  @apply bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded font-mono text-sm;
+}
+
+html.dark .markdown-body code {
+  @apply bg-slate-800 text-slate-200;
+}
+
+.markdown-body pre {
+  @apply bg-slate-100 p-4 rounded-lg overflow-x-auto mb-4;
+}
+
+html.dark .markdown-body pre {
+  @apply bg-slate-800;
+}
+
+.markdown-body pre code {
+  @apply bg-transparent p-0 text-inherit;
+}
+
+.markdown-body blockquote {
+  @apply border-l-4 border-slate-300 pl-4 py-1 mb-4 italic text-slate-600 bg-slate-50;
+}
+
+html.dark .markdown-body blockquote {
+  @apply border-slate-600 text-slate-400 bg-slate-800/50;
+}
+
+.markdown-body img {
+  @apply max-w-full h-auto rounded shadow-sm my-4;
+}
+
+.markdown-body hr {
+  @apply my-8 border-slate-200;
+}
+
+html.dark .markdown-body hr {
+  @apply border-slate-700;
+}
+
+.markdown-body table {
+  @apply w-full mb-4 border-collapse text-left;
+}
+
+.markdown-body th {
+  @apply font-semibold bg-slate-100 px-4 py-2 border border-slate-300;
+}
+
+html.dark .markdown-body th {
+  @apply bg-slate-800 border-slate-600;
+}
+
+.markdown-body td {
+  @apply px-4 py-2 border border-slate-300;
+}
+
+html.dark .markdown-body td {
+  @apply border-slate-600;
+}

@@ -1,354 +1,273 @@
-window.onload = function() {
-    // Retrieve saved sizes from localStorage or use default [50, 50]
-    var savedSizes = JSON.parse(localStorage.getItem('split-sizes')) || [50, 50];
+// DOM Elements
+const loadingOverlay = document.getElementById('loading');
+const themeToggleBtn = document.getElementById('themeToggle');
+const htmlEl = document.documentElement;
+const previewContent = document.getElementById('preview-content');
+const tabEdit = document.getElementById('tab-edit');
+const tabPreview = document.getElementById('tab-preview');
+const paneEdit = document.getElementById('pane-edit');
+const panePreview = document.getElementById('pane-preview');
 
-    // Initialize Split.js
-    var splitInstance = Split(['#pad', '#markdown'], {
-        sizes: savedSizes,
-        minSize: 200,
-        gutterSize: 10,
-        cursor: 'col-resize',
-        direction: 'horizontal',
-        onDragEnd: function(sizes) {
-            // Save sizes to localStorage when dragging ends
-            localStorage.setItem('split-sizes', JSON.stringify(sizes));
-        },
-    });
+const converter = new showdown.Converter({
+    tables: true,
+    tasklists: true,
+    strikethrough: true,
+    emoji: true,
+    smoothLivePreview: true,
+    ghCodeBlocks: true,
+    smartIndentationFix: true,
+    requireSpaceBeforeHeadingText: true,
+    simpleLineBreaks: false
+});
 
-    // Remove dragging class on mouseup
-    document.addEventListener('mouseup', function() {
-        var gutters = document.querySelectorAll('.gutter');
-        gutters.forEach(function(gutter) {
-            gutter.classList.remove('dragging');
-        });
-    });
+let monacoEditor = null;
+let currentTab = 'edit';
 
-    // Initialize Showdown converter
-    var converter = new showdown.Converter();
+// Default Markdown Template
+const defaultMarkdown = `# Welcome to the Modern Markdown Editor
+
+## Features
+- **Real-time preview**
+- **Syntax Highlighting** powered by Monaco Editor
+- **Dark/Light Mode**
+- **PDF Export**
+- **Auto-save** (try refreshing the page!)
+
+### Code Block Example
+\`\`\`javascript
+function sayHello() {
+    console.log("Hello, World!");
+}
+\`\`\`
+
+### Task List
+- [x] Integrate Tailwind CSS
+- [x] Add Monaco Editor
+- [ ] Write awesome content
+`;
+
+// Theme Handling
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    // Get references to DOM elements
-    var pad = document.getElementById('pad');
-    var markdownArea = document.getElementById('markdown');
-
-    // Function to convert Markdown to HTML and display it
-    var convertTextAreaToMarkdown = function(){
-        var markdownText = pad.value;
-        var html = converter.makeHtml(markdownText);
-        markdownArea.innerHTML = html;
-    };
-
-    // Event listener for input changes in the textarea
-    pad.addEventListener('input', convertTextAreaToMarkdown);
-
-    // Initial conversion on page load
-    convertTextAreaToMarkdown();
-
-    // Theme Switching Logic
-    var themeSwitch = document.getElementById('theme-switch');
-    var themeLabel = document.getElementById('theme-label');
-
-    // Function to set the theme
-    var setTheme = function(isDark) {
-        if (isDark) {
-            document.body.classList.add('dark-theme');
-            themeLabel.textContent = 'Dark Mode';
-        } else {
-            document.body.classList.remove('dark-theme');
-            themeLabel.textContent = 'Light Mode';
-        }
-        // Save theme preference to localStorage
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    };
-
-    // Event listener for theme toggle
-    themeSwitch.addEventListener('change', function() {
-        setTheme(this.checked);
-    });
-
-    // Initialize theme based on saved preference
-    var savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-        themeSwitch.checked = true;
-        setTheme(true);
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        htmlEl.classList.add('dark');
     } else {
-        themeSwitch.checked = false;
-        setTheme(false);
+        htmlEl.classList.remove('dark');
     }
+}
 
-    // Helper function to set a cookie
-    function setCookie(name, value, days) {
-        var expires = "";
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days*24*60*60*1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+themeToggleBtn.addEventListener('click', () => {
+    htmlEl.classList.toggle('dark');
+    const isDark = htmlEl.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    
+    if (monacoEditor) {
+        monaco.editor.setTheme(isDark ? 'vs-dark' : 'vs');
     }
+});
 
-    // Helper function to get a cookie
-    function getCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-    }
-
-    // Check if the "dontShowAgain" cookie exists
-    if (!getCookie('intro_dont_show_again')) {
-        // Initialize Intro.js for the tour
-        introJs().setOptions({
-            dontShowAgain: true, // Enable the "Don't Show Again" checkbox
-            steps: [
-                {
-                    title: "👋 Welcome to Markdown Viewer!",
-                    intro: "Hello there! Let's embark on a quick tour of Markdown Viewer and discover its cool features. Ready? Let's go!"
-                },
-                {
-                    title: "🌗 Switch Themes Effortlessly!",
-                    element: document.querySelector('.toggle-btn'),
-                    intro: "Feeling the need for a change? Toggle between light and dark mode to suit your mood. Give it a try!",
-                    position: 'bottom'
-                },
-                {
-                    title: "🎨 Customize Your Text Color",
-                    element: document.querySelector('#text-color-picker'),
-                    intro: "Want your text to pop with some color? Pick your favorite shade and watch your text come to life!",
-                    position: 'bottom'
-                },
-                {
-                    title: "🖼️ Set Your Background Mood",
-                    element: document.querySelector('#bg-color-picker'),
-                    intro: "A good background sets the tone! Select a background color that feels just right for you.",
-                    position: 'bottom'
-                },
-                {
-                    title: "📖 Markdown Cheat Sheet",
-                    element: document.querySelector('.cheat-sheet-btn'),
-                    intro: "New to Markdown? Don’t worry! Click here to access a handy cheat sheet and master Markdown syntax quickly!",
-                    position: 'bottom'
-                },
-                {
-                    title: "🎯 Clickable Markdown Shortcuts",
-                    element: document.querySelector('.toolbar'),
-                    intro: "Speed up your writing by using these quick formatting buttons. Just click, and the correct Markdown syntax will appear for you!",
-                    position: 'bottom'
-                },
-                {
-                    title: "💾 Download Your Work",
-                    element: document.querySelector('.download-btn'),
-                    intro: "Ready to save your masterpiece? Click this button to download your Markdown text as a .md file.",
-                    position: 'bottom'
-                },
-                {
-                    title: "↔️ Resizable Gutter",
-                    element: document.querySelector('.gutter'),
-                    intro: "Need more space to preview or write? Simply drag this gutter left or right to adjust the size of the input and preview areas.",
-                    position: 'right'
-                },
-                {
-                    title: "✍️ Write Your Markdown",
-                    element: document.querySelector('#pad'),
-                    intro: "This is your creative canvas! Type your Markdown here, and see it beautifully transformed into formatted text instantly.",
-                    position: 'right'
-                },
-                {
-                    title: "🔍 Live Markdown Preview",
-                    element: document.querySelector('#markdown'),
-                    intro: "Here's where the magic happens! As you type, watch your Markdown transform in real time. Enjoy the smooth preview!",
-                    position: 'left'
-                }
-            ]
-        }).oncomplete(function() {
-            // If the "Don't Show Again" checkbox is checked, store the cookie
-            var dontShowAgainCheckbox = document.querySelector(".introjs-dontshowagain");
-            if (dontShowAgainCheckbox && dontShowAgainCheckbox.checked) {
-                setCookie('intro_dont_show_again', 'true', 365); // Cookie will expire in 1 year
-            }
-        }).onexit(function() {
-            // Handle the case when the user clicks the "X" (exit) button
-            var dontShowAgainCheckbox = document.querySelector(".introjs-dontshowagain");
-            if (dontShowAgainCheckbox && dontShowAgainCheckbox.checked) {
-                setCookie('intro_dont_show_again', 'true', 365);
-            }
-        }).start();
+// Mobile Tabs Handling
+window.switchTab = function(tab) {
+    currentTab = tab;
+    if (tab === 'edit') {
+        tabEdit.classList.replace('border-transparent', 'border-blue-600');
+        tabEdit.classList.replace('text-slate-500', 'text-blue-600');
+        tabEdit.classList.replace('dark:text-slate-400', 'dark:text-blue-400');
+        
+        tabPreview.classList.replace('border-blue-600', 'border-transparent');
+        tabPreview.classList.replace('text-blue-600', 'text-slate-500');
+        tabPreview.classList.replace('dark:text-blue-400', 'dark:text-slate-400');
+        
+        panePreview.classList.add('translate-x-full');
+        paneEdit.classList.remove('-translate-x-full');
+    } else {
+        tabPreview.classList.replace('border-transparent', 'border-blue-600');
+        tabPreview.classList.replace('text-slate-500', 'text-blue-600');
+        tabPreview.classList.replace('dark:text-slate-400', 'dark:text-blue-400');
+        
+        tabEdit.classList.replace('border-blue-600', 'border-transparent');
+        tabEdit.classList.replace('text-blue-600', 'text-slate-500');
+        tabEdit.classList.replace('dark:text-blue-400', 'dark:text-slate-400');
+        
+        panePreview.classList.remove('translate-x-full');
+        paneEdit.classList.add('-translate-x-full');
     }
 };
 
-document.addEventListener('DOMContentLoaded', function () {
-    const pad = document.getElementById('pad');
-    const markdown = document.getElementById('markdown');
-    const themeSwitch = document.getElementById('theme-switch');
-
-    const bgColorPicker = document.getElementById('bg-color-picker');
-    const textColorPicker = document.getElementById('text-color-picker');
-
-    // Convert markdown to HTML
-    const converter = new showdown.Converter();
-    pad.addEventListener('input', function () {
-        markdown.innerHTML = converter.makeHtml(pad.value);
+// Markdown Rendering
+function renderMarkdown(text) {
+    previewContent.innerHTML = converter.makeHtml(text);
+    
+    const codeBlocks = previewContent.querySelectorAll('pre');
+    codeBlocks.forEach(pre => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-wrapper relative group mb-4';
+        pre.parentNode.insertBefore(wrapper, pre);
+        
+        pre.style.marginBottom = '0';
+        
+        wrapper.appendChild(pre);
+        
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn absolute top-2 right-2 p-1.5 bg-slate-200/80 dark:bg-slate-700/80 text-slate-600 dark:text-slate-300 rounded hover:bg-slate-300 dark:hover:bg-slate-600 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10 backdrop-blur-sm';
+        btn.innerHTML = '<i class="ph ph-copy"></i>';
+        btn.title = 'Copy code';
+        
+        btn.addEventListener('click', () => {
+            const code = pre.querySelector('code');
+            if (code) {
+                navigator.clipboard.writeText(code.innerText).then(() => {
+                    btn.innerHTML = '<i class="ph ph-check text-green-500"></i>';
+                    btn.classList.add('md:opacity-100'); 
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="ph ph-copy"></i>';
+                        btn.classList.remove('md:opacity-100');
+                    }, 2000);
+                });
+            }
+        });
+        
+        wrapper.appendChild(btn);
     });
-
-    // Theme switch toggle
-    themeSwitch.addEventListener('change', function () {
-        if (this.checked) {
-            document.body.classList.add('dark-theme');
-            document.getElementById('theme-label').textContent = 'Dark Mode';
-        } else {
-            document.body.classList.remove('dark-theme');
-            document.getElementById('theme-label').textContent = 'Light Mode';
-        }
-    });
-
-    // Handle background color change
-    bgColorPicker.addEventListener('input', function (event) {
-        document.documentElement.style.setProperty('--background-color', event.target.value);
-        document.documentElement.style.setProperty('--textarea-background', event.target.value);
-        document.documentElement.style.setProperty('--preview-background', event.target.value);
-    });
-
-    // Handle text color change
-    textColorPicker.addEventListener('input', function (event) {
-        document.documentElement.style.setProperty('--text-color', event.target.value);
-    });
-
-    // Set default values for color pickers
-    bgColorPicker.value = '#ffffff'; // Default background color
-    textColorPicker.value = '#000000'; // Default text color
-});
-
-// New toolbar and markdown conversion logic
-document.addEventListener('DOMContentLoaded', function() {
-    const converter = new showdown.Converter();
-    const pad = document.getElementById('pad');
-    const markdownArea = document.getElementById('markdown');
-    const modal = document.getElementById('modal');
-
-    // Markdown conversion on input
-    pad.addEventListener('input', updateMarkdown);
-
-    function updateMarkdown() {
-        const markdownText = pad.value;
-        markdownArea.innerHTML = converter.makeHtml(markdownText);
-    }
-
-    // Markdown Toolbar Functions
-    function insertAtCursor(text) {
-        const start = pad.selectionStart;
-        const end = pad.selectionEnd;
-        const padText = pad.value;
-        pad.value = padText.substring(0, start) + text + padText.substring(end);
-        pad.focus();
-        updateMarkdown();
-    }
-
-    window.applyBold = function() {
-        insertAtCursor('**bold text**');
-    };
-
-    window.applyItalic = function() {
-        insertAtCursor('_italic text_');
-    };
-
-    window.applyHeader = function() {
-        insertAtCursor('# Heading 1\n');
-    };
-
-    window.applyList = function() {
-        insertAtCursor('- List item\n');
-    };
-
-    window.applyLink = function() {
-        insertAtCursor('[link](http://example.com)');
-    };
-
-    window.applyCode = function() {
-        insertAtCursor('```\nCode block\n```');
-        modal.style.display = "none";
-    };
-
-    window.applyImage = function() {
-        insertAtCursor('![alt text](http://image-url.com)');
-        modal.style.display = "none";
-    };
-
-    window.applyQuote = function() {
-        insertAtCursor('> Blockquote');
-        modal.style.display = "none";
-    };
-
-    window.applySubscript = function() {
-        insertAtCursor('<sub>subscript</sub>');
-        modal.style.display = "none";
-    };
-
-    window.applyInlineCode = function() {
-        insertAtCursor('`inline code`');
-        modal.style.display = "none";
-    };
-
-    window.applyOrderedList = function() {
-        insertAtCursor('1. Ordered item\n2. Ordered item\n');
-        modal.style.display = "none";
-    };
-
-    window.applySubList = function() {
-        insertAtCursor('- Main item\n  - Sub-item\n');
-        modal.style.display = "none";
-    };
-
-    window.applyHorizontalRule = function() {
-        insertAtCursor('---\n');
-        modal.style.display = "none";
-    };
-
-    window.applyTaskList = function() {
-        insertAtCursor('- [ ] Task\n- [x] Completed task\n');
-        modal.style.display = "none";
-    };
-
-    window.applyBanner = function() {
-        insertAtCursor("![MasterHead](http://image-url.gif)\n");
-        modal.style.display = "none";
-    };
-
-    // Modal controls
-    window.openModal = function() {
-        modal.style.display = 'flex';
-    };
-
-    window.closeModal = function() {
-        modal.style.display = 'none';
-    };
-
-    // Close the modal if the user clicks outside the modal
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    };
-});
-
-// Download content
-function downloadMarkdown() {
-    // Get the Markdown content from the textarea
-    const markdownContent = document.getElementById('pad').value;
-
-    // Create a Blob with the Markdown content
-    const blob = new Blob([markdownContent], { type: 'text/markdown' });
-
-    // Create a temporary anchor element to trigger the download
-    const anchor = document.createElement('a');
-    anchor.href = URL.createObjectURL(blob);
-    anchor.download = 'document.md'; // Default filename
-    anchor.style.display = 'none';
-
-    // Append the anchor to the document, trigger the click, and remove it
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
 }
+
+function saveContent(text) {
+    localStorage.setItem('md-content', text);
+}
+
+function loadContent() {
+    return localStorage.getItem('md-content');
+}
+
+// PDF Export
+window.exportPDF = function() {
+    const element = previewContent.cloneNode(true);
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('markdown-body');
+    wrapper.style.padding = '20px';
+    wrapper.style.backgroundColor = '#ffffff';
+    wrapper.appendChild(element);
+
+    const copyBtns = wrapper.querySelectorAll('.copy-btn');
+    copyBtns.forEach(btn => btn.remove());
+
+    const opt = {
+        margin: [0.5, 0.5, 0.5, 0.5],
+        filename: 'Markdown_Document.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        pagebreak: { 
+            mode: ['css', 'legacy'], 
+            avoid: ['pre', 'img', 'blockquote', 'table', 'tr', 'h1', 'h2', 'h3']
+        },
+        html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            onclone: (clonedDoc) => {
+                clonedDoc.documentElement.classList.remove('dark');
+            }
+        },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(wrapper).save();
+};
+
+require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.41.0/min/vs' }});
+
+require(['vs/editor/editor.main'], function() {
+    document.fonts.ready.then(function() {
+        const isDark = htmlEl.classList.contains('dark');
+        const savedContent = loadContent();
+        
+        monacoEditor = monaco.editor.create(document.getElementById('editor-container'), {
+            value: savedContent || defaultMarkdown,
+            language: 'markdown',
+            theme: isDark ? 'vs-dark' : 'vs',
+            wordWrap: 'on',
+            minimap: { enabled: false },
+            fontSize: 14,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontLigatures: true,
+            lineHeight: 24,
+            padding: { top: 16, bottom: 16 },
+            scrollBeyondLastLine: false,
+            smoothScrolling: true,
+            automaticLayout: true,
+            scrollbar: {
+                horizontal: 'hidden'
+            }
+        });
+
+        renderMarkdown(monacoEditor.getValue());
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => loadingOverlay.style.display = 'none', 300);
+
+        monacoEditor.onDidChangeModelContent(() => {
+            const val = monacoEditor.getValue();
+            renderMarkdown(val);
+            saveContent(val);
+        });
+
+        monaco.editor.remeasureFonts();
+
+    window.editorAction = function(action) {
+        if (!monacoEditor) return;
+        
+        const selection = monacoEditor.getSelection();
+        const model = monacoEditor.getModel();
+        const text = model.getValueInRange(selection);
+        let insertText = '';
+        let insertRange = selection;
+        let newSelection = selection;
+
+        switch (action) {
+            case 'bold':
+                insertText = `**${text || 'bold text'}**`;
+                break;
+            case 'italic':
+                insertText = `*${text || 'italic text'}*`;
+                break;
+            case 'strikethrough':
+                insertText = `~~${text || 'strikethrough'}~~`;
+                break;
+            case 'heading':
+                insertText = `\n# ${text || 'Heading'}\n`;
+                break;
+            case 'quote':
+                insertText = `\n> ${text || 'Blockquote'}\n`;
+                break;
+            case 'code':
+                if (text.includes('\\n')) {
+                    insertText = `\n\`\`\`\n${text || 'code block'}\n\`\`\`\n`;
+                } else {
+                    insertText = `\`${text || 'inline code'}\``;
+                }
+                break;
+            case 'link':
+                insertText = `[${text || 'link text'}](https://)`;
+                break;
+            case 'image':
+                insertText = `![${text || 'alt text'}](https://)`;
+                break;
+            case 'ul':
+                insertText = text ? text.split('\\n').map(line => `- ${line}`).join('\\n') : '\\n- list item\\n';
+                break;
+            case 'ol':
+                insertText = text ? text.split('\\n').map((line, i) => `${i+1}. ${line}`).join('\\n') : '\\n1. list item\\n';
+                break;
+        }
+
+        monacoEditor.executeEdits("toolbar", [{
+            range: insertRange,
+            text: insertText,
+            forceMoveMarkers: true
+        }]);
+        monacoEditor.focus();
+    };
+    });
+});
+
+initTheme();
